@@ -1,73 +1,80 @@
 <%= render 'menu' %>
-<div class="row">
-<div class="col-md-6">
-<%= link_to 'Add Task', new_task_path, :class=>'btn btn-primary white' %>
-</div>
-<div class="col-md-6">
-<form action="" method="get" >
- 
-  <%= label_tag :sort_by %>
-  <select name="filter">
-  <option value=""> - choose - </option>
-  <option value="task_name">Task Name</option>
-  <option value="description">description</option>
-  <option value="priority">priority</option>
-  <option value="due_date">due date</option>
-  <option value="status">status</option>
-  </select>
 
-  <%= submit_tag 'Filter', name: nil %>
-</form>
+<div class="row">
+  <div class="col-md-6">
+    <%= link_to 'Add Task', new_task_path, :class=>'btn btn-primary white' %>
+  </div>
+  
+  <div class="col-md-6">
+    <form action="" method="get" >
+   
+    <%= label_tag :sort_by %>
+    <select name="filter">
+    <option value=""> - choose - </option>
+    <option value="task_name">Task Name</option>
+    <option value="description">description</option>
+    <option value="priority">priority</option>
+    <option value="due_date">due date</option>
+    <option value="status">status</option>
+    </select>
+
+    <%= submit_tag 'Filter', name: nil %>
+  </form>
+  
+  </div>
 </div>
-</div>
-<p id="notice"><%= notice %>
+
+<p id="notice"><%= notice %></p>
 
 <h1><%= @title %></h1>
 
 <table class="table">
-        <thead>
-          <th>#</th>
-          <th>Task Name</th>
-          <th>Description</th>
-          <th>Priority</th>
-          <th>Due Date</th>
-          <th>Status</th>
-          <th>Action</th>
-        </thead>
-        <% if params[:page].present? %>
-        <%    count = ((params[:page] || 1).to_i - 1) * 5 %>
-        <% else %>
-        <% count = 0 %>
-        <% end %>
-        <% i = 1 %>
-     <% @tasks.each do |task| %>
-    <% due_date      =  task.due_date.in_time_zone("Asia/Jakarta").strftime('%A, %d %B %y') %>
-    <% current_date  =  Time.now.in_time_zone("Asia/Jakarta").strftime('%A, %d %B %y') %>
-     
-        <tr>
-                <td><%= count + i%></td>
-        <td><%= task.task_name %></td>
-        <td><%= task.description %></td>
-        <td><%= task.priority %></td>
-        <td><span
-<% if due_date == current_date && task.status == false %>
+  <thead>
+    <th>#</th>
+    <th>Task Name</th>
+    <th>Description</th>
+    <th>Priority</th>
+    <th>Due Date</th>
+    <th>Status</th>
+    <th>Action</th>
+  </thead>
+
+  <% if params[:page].present? %>
+    <% count = ((params[:page] || 1).to_i - 1) * 5 %>
+  <% else %>
+    <% count = 0 %>
+  <% end %>
+  
+  <% i = 1 %>
+  <% @tasks.each do |task| %>
+    <% due_date     = task.due_date.in_time_zone("Asia/Jakarta").strftime('%A, %d %B %y') %>
+    <% current_date = Time.now.in_time_zone("Asia/Jakarta").strftime('%A, %d %B %y') %>
+    <tr>
+      <td><%= count + i%></td>
+      <td><%= task.task_name %></td>
+      <td><%= task.description %></td>
+      <td><%= task.priority %></td>
+      <td><span 
+      <% if due_date == current_date && task.status == false %>
           class="today-notice"
           <% due_date = "TODAY" %>
-      <% end %>
-       > <%= due_date %></span></td>
-        <td><% if task.status== true %>
+      <% end %> > 
+      <%= due_date %></span></td>
+      
+      <td><% if task.status== true %>
          Completed
          <% else%>
           Not Complete 
           <% end %>
         </td>
-       
-        <td colspan="2"><%= link_to 'Edit', edit_task_path(task), :class => "btn btn-primary white" %>  
-        <%= link_to 'Delete', task , :class => "btn btn-danger white", method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-        <% i +=1%>
-    <% end %>
-    </table>
+      
+      <td colspan="2"><%= link_to 'Edit', edit_task_path(task), :class => "btn btn-primary white" %>  
+      <%= link_to 'Delete', task , :class => "btn btn-danger white", method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% i +=1%>
+  <% end %>
+  </table>
+  
 <div class="text-center">
 <%= will_paginate @tasks, renderer: BootstrapPagination::Rails %>
 </div>
