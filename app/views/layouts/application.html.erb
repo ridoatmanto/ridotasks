@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todo</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+<div class="container">
+<div class="row">
+<div class="col-md-10 col-md-offset-1 ">
+  <! -- body content here -->
+
+
+    <%= yield %>
+    </div>
+    </div>
+    </div>
+    <br/>
+    <footer class="text-center">
+    Copyright &copy; 2018 &middot; Build with Curiousity by <%= link_to 'Rido Sandi Atmanto', 'https://cameldev.com' %>
+    </footer>
+    <br/>
+  </body>
+</html>
