@@ -7,17 +7,14 @@
   
   <div class="col-md-6">
     <form action="" method="get" >
-   
     <%= label_tag :sort_by %>
-    <select name="filter">
-    <option value=""> - choose - </option>
-    <option value="task_name">Task Name</option>
-    <option value="description">description</option>
-    <option value="priority">priority</option>
-    <option value="due_date">due date</option>
-    <option value="status">status</option>
-    </select>
-
+    <%= select_tag :filter, 
+    options_for_select(
+    [['Task name','task_name'],
+    ['Description','description'],
+    ['Priority', 'priority'],
+    ['Due Date','due_date'], 
+    ['Status','status']], params[:sort_by])%>
     <%= submit_tag 'Filter', name: nil %>
   </form>
   
@@ -32,7 +29,7 @@
   <thead>
     <th>#</th>
     <th>Task Name</th>
-    <th>Description</th>
+    <th width="150">Description</th>
     <th>Priority</th>
     <th>Due Date</th>
     <th>Status</th>
@@ -47,8 +44,8 @@
   
   <% i = 1 %>
   <% @tasks.each do |task| %>
-    <% due_date     = task.due_date.in_time_zone("Asia/Jakarta").strftime('%A, %d %B %y') %>
-    <% current_date = Time.now.in_time_zone("Asia/Jakarta").strftime('%A, %d %B %y') %>
+    <% due_date     = task.due_date.strftime('%A, %d %B %y') %>
+    <% current_date = Time.zone.now.strftime('%A, %d %B %y') %>
     <tr>
       <td><%= count + i%></td>
       <td><%= task.task_name %></td>

@@ -1,26 +1,28 @@
 class TasksController < ApplicationController
+  
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  
 
   # GET /tasks
   # GET /tasks.json
 
   def index
     @title = "Today Task"
-    @tasks = Task.where(status: :false).order(priority: :asc).order(filter_param).where("DATE(due_date) = DATE(?)", Time.now)
+    @tasks = Task.uncompleted.order(priority: :asc).order(filter_param).today.where(id_user: current_user[:id])
     @tasks = @tasks.paginate(per_page: 5, page: params[:page])
-    render 'index'
+    #render plain: "where('DATE(due_date) = ?', #{Time.zone.today.to_date}"
   end
 
   def completed
     @title = "Completed Task"
-    @tasks = Task.where(status: 1).order(filter_param).paginate(per_page: 5, page: params[:page])
+    @tasks = Task.completed.order(filter_param).paginate(per_page: 5, page: params[:page]).where(id_user: current_user[:id])
     render 'index'
   end
 
   def queue
     @title = "Queue Task"
-    @tasks = Task.where(status: 0).order(filter_param).where("DATE(due_date) != DATE(?)", Time.now)
+    @tasks = Task.uncompleted.order(filter_param).where(id_user: current_user[:id])
     @tasks = @tasks.paginate(per_page: 5, page: params[:page])
     render 'index'
   end
@@ -42,8 +44,9 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    @task = Task.new(task_params)
 
+    @task = Task.new(task_params)
+    @task.id_user = current_user[:id]
     respond_to do |format|
       if @task.save
         format.html { redirect_to @task, notice: 'Task was successfully created.' }
@@ -59,6 +62,8 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1.json
   def update
     respond_to do |format|
+      @task.id_user = current_user[:id]
+
       if @task.update(task_params)
         format.html { redirect_to @task, notice: 'Task was successfully updated.' }
         format.json { render :show, status: :ok, location: @task }
@@ -104,4 +109,5 @@ class TasksController < ApplicationController
     def task_params
       params.require(:task).permit(:task_name, :description, :priority, :due_date, :status)
     end
+
 end
