@@ -8,7 +8,7 @@ class Task < ApplicationRecord
   end
 
   def self.uncompleted
-  	where(status: false).where(due_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+  	where(status: false).where.not(due_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
   end
 
   def self.today
